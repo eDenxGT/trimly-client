@@ -1,3 +1,4 @@
+import { LikedUser } from "@/components/modals/LikedUsersModal";
 import { IBooking } from "./Booking";
 import {
   ICommunityChat,
@@ -118,6 +119,10 @@ export interface IAllCommunitiesResponse {
 
 export interface ICommunityChatResponse extends IAxiosResponse {
   community: ICommunityChat;
+}
+
+export interface ILikedUsersResponse extends IAxiosResponse {
+  users: LikedUser[];
 }
 
 // * Meetings
