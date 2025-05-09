@@ -208,7 +208,7 @@ export function ClientShopDetailsPage({ role = "client" }: { role: string }) {
               <span className="text-xs">Place</span>
             </Button>
             <Button
-              onClick={() => navigate(`/chat?userId=${shop.userId || ""}`)}
+              onClick={() => navigate(`/chat?userId=${shop.userId || ""}&type=dm`)}
               variant="ghost"
               className="flex flex-col items-center p-2 h-auto text-gray-600 transition-colors hover:text-[var(--yellow-hover)]"
             >

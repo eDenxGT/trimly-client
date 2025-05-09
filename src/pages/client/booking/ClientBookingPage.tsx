@@ -37,18 +37,6 @@ export interface OpeningHours {
   [key: string]: { open: string | null; close: string | null } | null;
 }
 
-export interface Booking {
-  clientId: string;
-  shopId: string;
-  services: string[];
-  date: Date;
-  startTime: string;
-  bookedTimeSlots: string[];
-  duration: number;
-  total: number;
-  status: string;
-}
-
 export function ClientBookingPage() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedServices, setSelectedServices] = useState<IService[]>([]);
