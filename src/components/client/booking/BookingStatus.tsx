@@ -55,7 +55,6 @@ export function BookingStatus({
 
   const currentStepIndex = steps.findIndex((step) => step.id === currentStep);
 
-  console.log("bookingData", bookingData);
 
   if (!bookingData?.bookingId) {
     return (

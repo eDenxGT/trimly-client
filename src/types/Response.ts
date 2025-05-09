@@ -176,8 +176,8 @@ export interface IFaceShapeDetectionResponse extends IAxiosResponse {
 
 export interface IHairstyleResponse extends IAxiosResponse {
   hairstyles: IHairstyle[];
-  
 }
+
 export interface IHairstylePaginationResponse extends IAxiosResponse {
   hairstyles: IHairstyle[];
   totalPages: number;

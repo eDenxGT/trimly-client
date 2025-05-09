@@ -191,10 +191,6 @@ export const ChatProvider = ({ children }: { children: React.ReactNode }) => {
     };
   }, [socket, chatType, allChats, notifyToast]);
 
-  useEffect(() => {
-    console.log("currentChat", currentChat);
-  }, [currentChat]);
-
   const setAllChats = (
     chats: IDirectChatPreview[] | ICommunityChatPreview[]
   ) => {

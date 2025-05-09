@@ -58,7 +58,7 @@ export function LikedUsersModal({
           </div>
         </DialogHeader>
 
-        <div className="max-h-[250px] overflow-y-auto p-1">
+        <div className="max-h-[250px] overflow-y-auto p-1 no-scrollbar">
           {isLoading ? (
             <div className="flex justify-center items-center py-8">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-800"></div>
