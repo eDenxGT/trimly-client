@@ -198,7 +198,7 @@ export function PrivateHeader({
                               {notification.message}
                             </p>
                             <p className="text-xs text-gray-400 mt-1">
-                              {getSmartDate(notification.createdAt)}
+                              {getSmartDate(notification.createdAt.toString())}
                             </p>
                           </div>
                           {!notification.isRead && (
