@@ -8,7 +8,6 @@ import ClientRoutes from "./routes/ClientRoutes";
 const BarberRoutes = lazy(() => import("./routes/BarberRoutes"));
 const AdminRoutes = lazy(() => import("./routes/AdminRoutes"));
 
-// branch test
 
 function App() {
   return (
