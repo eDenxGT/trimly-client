@@ -6,7 +6,6 @@ import { persistor, store } from "@/store/store";
 import { ToastContainer } from "./ToastContainer";
 import { LoadingProvider } from "@/hooks/common/useLoading";
 import { SocketProvider } from "@/contexts/SocketContext";
-import { NotificationListener } from "@/utils/providers/NotificationListener";
 import { ChatProvider } from "@/contexts/ChatContext";
 import { NotificationProvider } from "@/contexts/NotificationContext";
 
@@ -21,7 +20,6 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
             <NotificationProvider>
               <ChatProvider>
                 <SocketProvider>
-                  <NotificationListener />
                   <LoadingProvider>
                     <ToastContainer>{children}</ToastContainer>
                   </LoadingProvider>

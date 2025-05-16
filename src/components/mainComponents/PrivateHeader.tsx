@@ -8,6 +8,8 @@ import {
   Bell,
   ChevronRight,
 } from "lucide-react";
+import { IoCheckmarkSharp, IoCheckmarkDoneSharp } from "react-icons/io5";
+
 import { Button, IconButton, Tooltip } from "@mui/material";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -65,9 +67,7 @@ export function PrivateHeader({
     ? "/notifications"
     : "/barber/notifications";
 
-  const { notifications } = useNotifications();
-
-  const unreadCount = notifications.filter((notif) => !notif.isRead).length;
+  const { notifications, unreadCount } = useNotifications();
 
   return (
     <header
@@ -90,7 +90,7 @@ export function PrivateHeader({
                   backgroundColor: "#2a2a2a",
                 },
                 "& .MuiButton-startIcon": {
-                  margin: 0, // Fix padding issue in Edge
+                  margin: 0,
                 },
               }}
               onClick={onSidebarToggle}
@@ -151,71 +151,141 @@ export function PrivateHeader({
                   className="w-80 bg-[#1e1e1e] text-white border-[#2a2a2a] shadow-lg p-0 overflow-hidden"
                   align="end"
                 >
-                  <div className="px-4 py-4 border-b border-[#2a2a2a]">
-                    <h4 className="font-medium leading-none">Notifications</h4>
-                    <p className="text-sm text-gray-400 mt-1">
-                      You have {unreadCount} unread{" "}
-                      {unreadCount === 1 ? "notification" : "notifications"}
-                    </p>
+                  <div className="px-4 py-4 border-b border-[#2a2a2a] flex justify-between items-center">
+                    <div>
+                      <h4 className="font-medium leading-none">
+                        Notifications
+                      </h4>
+                      {notifications.length > 0 && (
+                        <p className="text-sm text-gray-400 mt-1">
+                          You have {unreadCount} unread{" "}
+                          {unreadCount === 1 ? "notification" : "notifications"}
+                        </p>
+                      )}
+                    </div>
+                    {unreadCount > 0 && (
+                      <Button
+                        variant="text"
+                        size="small"
+                        onClick={() => console.log("Mark all as read")}
+                        sx={{
+                          color: "#f59e0b",
+                          fontSize: "0.75rem",
+                          padding: "4px 8px",
+                          minWidth: "auto",
+                          "&:hover": {
+                            backgroundColor: "rgba(245, 158, 11, 0.1)",
+                          },
+                        }}
+                        startIcon={
+                          <IoCheckmarkDoneSharp className="h-3.5 w-3.5" />
+                        }
+                      />
+                    )}
                   </div>
 
                   <div className="max-h-[350px] overflow-y-auto">
-                    {notifications.slice(0, 5).map((notification, index) => (
-                      <div
-                        key={index}
-                        onClick={() =>
-                          console.log(
-                            `Notification clicked: ${notification.notificationId}`
-                          )
-                        }
-                        className={cn(
-                          "px-4 py-3 hover:bg-[#2a2a2a] cursor-pointer border-b border-[#2a2a2a] last:border-b-0",
-                          !notification.isRead && "bg-[#252525]"
-                        )}
-                      >
-                        <div className="flex items-start gap-3">
-                          <div
-                            className={cn(
-                              "h-8 w-8 rounded-full flex items-center justify-center shrink-0",
-                              notification.isRead
-                                ? "bg-gray-600"
-                                : "bg-amber-500"
-                            )}
-                          >
-                            <img
-                              src="/logo.svg"
-                              alt="Logo"
-                              className="w-4 h-4"
-                            />
-                          </div>
-                          <div className="flex-1">
-                            <p
-                              className={cn(
-                                "text-sm",
-                                !notification.isRead && "font-medium"
-                              )}
-                            >
-                              {notification.message}
-                            </p>
-                            <p className="text-xs text-gray-400 mt-1">
-                              {getSmartDate(notification.createdAt.toString())}
-                            </p>
-                          </div>
-                          {!notification.isRead && (
-                            <span className="h-2 w-2 rounded-full bg-blue-500 shrink-0 mt-1" />
+                    {notifications.length > 0 ? (
+                      notifications.slice(0, 5).map((notification, index) => (
+                        <div
+                          key={index}
+                          className={cn(
+                            "px-4 py-3 hover:bg-[#2a2a2a] border-b border-[#2a2a2a] last:border-b-0",
+                            !notification.isRead && "bg-[#252525]"
                           )}
+                        >
+                          <div className="flex items-start gap-3">
+                            <div
+                              className={cn(
+                                "h-8 w-8 rounded-full flex items-center justify-center shrink-0",
+                                notification.isRead
+                                  ? "bg-gray-600"
+                                  : "bg-amber-500"
+                              )}
+                              onClick={() =>
+                                console.log(
+                                  `Notification clicked: ${notification.notificationId}`
+                                )
+                              }
+                              style={{ cursor: "pointer" }}
+                            >
+                              <img
+                                src="/logo.svg"
+                                alt="Logo"
+                                className="w-4 h-4"
+                              />
+                            </div>
+                            <div
+                              className="flex-1"
+                              onClick={() =>
+                                console.log(
+                                  `Notification clicked: ${notification.notificationId}`
+                                )
+                              }
+                              style={{ cursor: "pointer" }}
+                            >
+                              <p
+                                className={cn(
+                                  "text-sm",
+                                  !notification.isRead && "font-medium"
+                                )}
+                              >
+                                {notification.message}
+                              </p>
+                              <p className="text-xs text-gray-400 mt-1">
+                                {getSmartDate(
+                                  notification.createdAt.toString()
+                                )}
+                              </p>
+                            </div>
+                            {!notification.isRead ? (
+                              <Tooltip
+                                title="Mark as read"
+                                arrow
+                                placement="left"
+                              >
+                                <IconButton
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    console.log(
+                                      `Mark as read: ${notification.notificationId}`
+                                    );
+                                  }}
+                                  sx={{
+                                    padding: "4px",
+                                    color: "#9ca3af",
+                                    "&:hover": {
+                                      backgroundColor:
+                                        "rgba(255, 255, 255, 0.1)",
+                                      color: "#f59e0b",
+                                    },
+                                  }}
+                                >
+                                  <IoCheckmark	Sharp className="h-4 w-4" />
+                                </IconButton>
+                              </Tooltip>
+                            ) : (
+                              <span className="w-6" /> // Spacer to maintain alignment
+                            )}
+                          </div>
                         </div>
+                      ))
+                    ) : (
+                      <div className="px-4 py-3 text-center border-b border-[#2a2a2a]">
+                        No notifications
                       </div>
-                    ))}
+                    )}
                   </div>
 
-                  <div
-                    className="px-4 py-3 text-center border-t border-[#2a2a2a] text-sm font-medium text-amber-500 hover:bg-[#2a2a2a] cursor-pointer flex items-center justify-center"
-                    onClick={() => navigate(notificationPath)}
-                  >
-                    View all notifications
-                    <ChevronRight className="ml-1 h-4 w-4" />
-                  </div>
+                  {notifications.length > 0 && (
+                    <div
+                      className="px-4 py-3 text-center border-t border-[#2a2a2a] text-sm font-medium text-amber-500 hover:bg-[#2a2a2a] cursor-pointer flex items-center justify-center"
+                      onClick={() => navigate(notificationPath)}
+                    >
+                      View all notifications
+                      <ChevronRight className="ml-1 h-4 w-4" />
+                    </div>
+                  )}
                 </PopoverContent>
               </Popover>
             </div>

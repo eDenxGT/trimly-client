@@ -6,12 +6,14 @@ import { getCurrentUserDetails } from "@/utils/helpers/getCurrentUser";
 import { IBarber, IClient } from "@/types/User";
 import { getBarberNotifications } from "@/services/barber/barberService";
 import { getNotificationsForClient } from "@/services/client/clientService";
+import { useToaster } from "@/hooks/ui/useToaster";
 
 type NotificationContextType = {
   notifications: INotification[];
-  addNotification: (notif: INotification) => void;
+  addNotification: (notification: INotification) => void;
   markAsRead: (id: string) => void;
   clearAll: () => void;
+  unreadCount: number;
 };
 
 const NotificationContext = createContext<NotificationContextType | undefined>(
@@ -24,8 +26,10 @@ export const NotificationProvider = ({
   children: React.ReactNode;
 }) => {
   const [notifications, setNotifications] = useState<INotification[]>([]);
+  const [unreadCount, setUnreadCount] = useState<number>(0);
 
   const user: IBarber | IClient | null = useSelector(getCurrentUserDetails);
+  const { notifyToast } = useToaster();
 
   const getNotifications = () => {
     if (user) {
@@ -45,8 +49,15 @@ export const NotificationProvider = ({
     getNotifications();
   }, []);
 
-  const addNotification = (notif: INotification) => {
-    setNotifications((prev) => [notif, ...prev]);
+  useEffect(() => {
+    const unreadCount = notifications.filter(
+      (notification) => !notification.isRead
+    ).length;
+    setUnreadCount(unreadCount);
+  }, [notifications]);
+
+  const addNotification = (notification: INotification) => {
+    setNotifications((prev) => [notification, ...prev]);
   };
 
   const markAsRead = (id: string) => {
@@ -60,8 +71,9 @@ export const NotificationProvider = ({
   };
 
   useEffect(() => {
-    socket.on("receive-notification", (notif: INotification) => {
-      addNotification({ ...notif, isRead: false });
+    socket.on("receive-notification", (notification: INotification) => {
+      addNotification({ ...notification, isRead: false });
+      notifyToast(notification);
     });
 
     return () => {
@@ -71,7 +83,7 @@ export const NotificationProvider = ({
 
   return (
     <NotificationContext.Provider
-      value={{ notifications, addNotification, markAsRead, clearAll }}
+      value={{ notifications, addNotification, markAsRead, clearAll, unreadCount }}
     >
       {children}
     </NotificationContext.Provider>
