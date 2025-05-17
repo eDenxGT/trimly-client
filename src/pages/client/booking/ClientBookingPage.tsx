@@ -314,6 +314,8 @@ export function ClientBookingPage() {
   };
 
   const handleWalletPaymentSuccess = () => {
+    console.log("Creating wallet booking", new Date());
+
     payWithWallet(
       {
         bookedTimeSlots,
@@ -567,8 +569,9 @@ export function ClientBookingPage() {
                           className="w-full"
                           amount={totals.total}
                           description="Slot Booking Payment"
-                          onCreateOrder={() =>
-                            createBooking({
+                          onCreateOrder={() => {
+                            console.log("Creating booking", new Date());
+                            return createBooking({
                               bookedTimeSlots,
                               clientId: user.userId || "",
                               date: selectedDate || "",
@@ -579,8 +582,8 @@ export function ClientBookingPage() {
                               shopId: shopId || "",
                               startTime: selectedTime || "",
                               total: totals.total,
-                            })
-                          }
+                            });
+                          }}
                           onVerifyPayment={verifyPayment}
                           onFailure={handleFailureBookingPayment}
                         />
