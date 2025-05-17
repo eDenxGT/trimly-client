@@ -340,3 +340,21 @@ export const getNotificationsForClient = async () => {
   );
   return response.data;
 };
+
+export const markSingleNotificationAsReadForClient = async ({
+  notificationId,
+}: {
+  notificationId: string;
+}) => {
+  const response = await clientAxiosInstance.patch(
+    `/client/notifications/${notificationId}/read`
+  );
+  return response.data;
+};
+
+export const markAllNotificationsAsReadForClient = async () => {
+  const response = await clientAxiosInstance.patch(
+    "/client/notifications/read"
+  );
+  return response.data;
+};

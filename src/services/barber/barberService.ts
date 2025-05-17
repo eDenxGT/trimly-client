@@ -399,3 +399,21 @@ export const getBarberNotifications = async () => {
   );
   return response.data;
 };
+
+export const markSingleNotificationAsReadForBarber = async ({
+  notificationId,
+}: {
+  notificationId: string;
+}) => {
+  const response = await barberAxiosInstance.patch(
+    `/barber/notifications/${notificationId}/read`
+  );
+  return response.data;
+};
+
+export const markAllNotificationsAsReadForBarber = async () => {
+  const response = await barberAxiosInstance.patch(
+    "/barber/notifications/read"
+  );
+  return response.data;
+};

@@ -6,7 +6,6 @@ import {
   LogOut,
   HelpCircle,
   Bell,
-  ChevronRight,
 } from "lucide-react";
 import { IoCheckmarkSharp, IoCheckmarkDoneSharp } from "react-icons/io5";
 
@@ -63,11 +62,12 @@ export function PrivateHeader({
     ? "/barber/settings/profile"
     : "/admin/settings/profile";
 
-  const notificationPath = isClient
-    ? "/notifications"
-    : "/barber/notifications";
+  // const notificationPath = isClient
+  //   ? "/notifications"
+  //   : "/barber/notifications";
 
-  const { notifications, unreadCount } = useNotifications();
+  const { notifications, unreadCount, markAllNotificationsAsRead, markAsRead } =
+    useNotifications();
 
   return (
     <header
@@ -124,10 +124,10 @@ export function PrivateHeader({
           )}
 
           {/* Notifications */}
-          <Tooltip title="Notifications" arrow placement="bottom">
-            <div>
-              <Popover>
-                <PopoverTrigger asChild>
+          <div>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Tooltip title="Notifications" arrow placement="bottom">
                   <IconButton
                     sx={{
                       minWidth: "auto",
@@ -146,157 +146,160 @@ export function PrivateHeader({
                       </span>
                     )}
                   </IconButton>
-                </PopoverTrigger>
-                <PopoverContent
-                  className="w-80 bg-[#1e1e1e] text-white border-[#2a2a2a] shadow-lg p-0 overflow-hidden"
-                  align="end"
-                >
-                  <div className="px-4 py-4 border-b border-[#2a2a2a] flex justify-between items-center">
-                    <div>
-                      <h4 className="font-medium leading-none">
-                        Notifications
-                      </h4>
-                      {notifications.length > 0 && (
-                        <p className="text-sm text-gray-400 mt-1">
-                          You have {unreadCount} unread{" "}
-                          {unreadCount === 1 ? "notification" : "notifications"}
-                        </p>
-                      )}
-                    </div>
-                    {unreadCount > 0 && (
-                      <Button
-                        variant="text"
-                        size="small"
-                        onClick={() => console.log("Mark all as read")}
+                </Tooltip>
+              </PopoverTrigger>
+              <PopoverContent
+                className="w-80 bg-[#1e1e1e] text-white border-[#2a2a2a] shadow-lg p-0 overflow-hidden"
+                align="end"
+              >
+                <div className="px-4 py-4 border-b border-[#2a2a2a] flex justify-between items-center">
+                  <div>
+                    <h4 className="font-medium leading-none">Notifications</h4>
+                    {notifications.length > 0 && (
+                      <p className="text-sm text-gray-400 mt-1">
+                        {unreadCount > 0
+                          ? `You have ${unreadCount} unread ${
+                              unreadCount === 1
+                                ? "notification"
+                                : "notifications"
+                            }`
+                          : "No unread notifications"}
+                      </p>
+                    )}
+                  </div>
+                  {unreadCount > 0 && (
+                    <Tooltip title="Mark all as read" arrow placement="left">
+                      <IconButton
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          markAllNotificationsAsRead();
+                        }}
                         sx={{
-                          color: "#f59e0b",
-                          fontSize: "0.75rem",
-                          padding: "4px 8px",
-                          minWidth: "auto",
+                          padding: "4px",
+                          color: "#9ca3af",
                           "&:hover": {
-                            backgroundColor: "rgba(245, 158, 11, 0.1)",
+                            backgroundColor: "rgba(255, 255, 255, 0.1)",
+                            color: "#f59e0b",
                           },
                         }}
-                        startIcon={
-                          <IoCheckmarkDoneSharp className="h-3.5 w-3.5" />
-                        }
-                      />
-                    )}
-                  </div>
+                      >
+                        <IoCheckmarkDoneSharp className="h-3.5 w-3.5" />
+                      </IconButton>
+                    </Tooltip>
+                  )}
+                </div>
 
-                  <div className="max-h-[350px] overflow-y-auto">
-                    {notifications.length > 0 ? (
-                      notifications.slice(0, 5).map((notification, index) => (
-                        <div
-                          key={index}
-                          className={cn(
-                            "px-4 py-3 hover:bg-[#2a2a2a] border-b border-[#2a2a2a] last:border-b-0",
-                            !notification.isRead && "bg-[#252525]"
-                          )}
-                        >
-                          <div className="flex items-start gap-3">
-                            <div
-                              className={cn(
-                                "h-8 w-8 rounded-full flex items-center justify-center shrink-0",
-                                notification.isRead
-                                  ? "bg-gray-600"
-                                  : "bg-amber-500"
-                              )}
-                              onClick={() =>
-                                console.log(
-                                  `Notification clicked: ${notification.notificationId}`
-                                )
-                              }
-                              style={{ cursor: "pointer" }}
-                            >
-                              <img
-                                src="/logo.svg"
-                                alt="Logo"
-                                className="w-4 h-4"
-                              />
-                            </div>
-                            <div
-                              className="flex-1"
-                              onClick={() =>
-                                console.log(
-                                  `Notification clicked: ${notification.notificationId}`
-                                )
-                              }
-                              style={{ cursor: "pointer" }}
-                            >
-                              <p
-                                className={cn(
-                                  "text-sm",
-                                  !notification.isRead && "font-medium"
-                                )}
-                              >
-                                {notification.message}
-                              </p>
-                              <p className="text-xs text-gray-400 mt-1">
-                                {getSmartDate(
-                                  notification.createdAt.toString()
-                                )}
-                              </p>
-                            </div>
-                            {!notification.isRead ? (
-                              <Tooltip
-                                title="Mark as read"
-                                arrow
-                                placement="left"
-                              >
-                                <IconButton
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    console.log(
-                                      `Mark as read: ${notification.notificationId}`
-                                    );
-                                  }}
-                                  sx={{
-                                    padding: "4px",
-                                    color: "#9ca3af",
-                                    "&:hover": {
-                                      backgroundColor:
-                                        "rgba(255, 255, 255, 0.1)",
-                                      color: "#f59e0b",
-                                    },
-                                  }}
-                                >
-                                  <IoCheckmark	Sharp className="h-4 w-4" />
-                                </IconButton>
-                              </Tooltip>
-                            ) : (
-                              <span className="w-6" /> // Spacer to maintain alignment
+                <div className="max-h-[350px] overflow-y-auto">
+                  {notifications.length > 0 ? (
+                    notifications.slice(0, 10).map((notification, index) => (
+                      <div
+                        key={index}
+                        className={cn(
+                          "px-4 py-3 hover:bg-[#2a2a2a] border-b border-[#2a2a2a] last:border-b-0",
+                          !notification.isRead && "bg-[#252525]"
+                        )}
+                      >
+                        <div className="flex items-start gap-3">
+                          <div
+                            className={cn(
+                              "h-8 w-8 rounded-full flex items-center justify-center shrink-0",
+                              notification.isRead
+                                ? "bg-gray-600"
+                                : "bg-amber-500"
                             )}
+                            onClick={() =>
+                              console.log(
+                                `Notification clicked: ${notification.notificationId}`
+                              )
+                            }
+                            style={{ cursor: "pointer" }}
+                          >
+                            <img
+                              src="/logo.svg"
+                              alt="Logo"
+                              className="w-4 h-4"
+                            />
                           </div>
+                          <div
+                            className="flex-1"
+                            onClick={() =>
+                              console.log(
+                                `Notification clicked: ${notification.notificationId}`
+                              )
+                            }
+                            style={{ cursor: "pointer" }}
+                          >
+                            <p
+                              className={cn(
+                                "text-sm",
+                                !notification.isRead && "font-medium"
+                              )}
+                            >
+                              {notification.message}
+                            </p>
+                            <p className="text-xs text-gray-400 mt-1">
+                              {getSmartDate(
+                                notification.createdAt?.toString() || ""
+                              )}
+                            </p>
+                          </div>
+                          {!notification.isRead ? (
+                            <Tooltip
+                              title="Mark as read"
+                              arrow
+                              placement="left"
+                            >
+                              <IconButton
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  markAsRead({
+                                    notificationId: notification.notificationId,
+                                  });
+                                }}
+                                sx={{
+                                  padding: "4px",
+                                  color: "#9ca3af",
+                                  "&:hover": {
+                                    backgroundColor: "rgba(255, 255, 255, 0.1)",
+                                    color: "#f59e0b",
+                                  },
+                                }}
+                              >
+                                <IoCheckmarkSharp className="h-4 w-4" />
+                              </IconButton>
+                            </Tooltip>
+                          ) : (
+                            <span className="w-6" />
+                          )}
                         </div>
-                      ))
-                    ) : (
-                      <div className="px-4 py-3 text-center border-b border-[#2a2a2a]">
-                        No notifications
                       </div>
-                    )}
-                  </div>
-
-                  {notifications.length > 0 && (
-                    <div
-                      className="px-4 py-3 text-center border-t border-[#2a2a2a] text-sm font-medium text-amber-500 hover:bg-[#2a2a2a] cursor-pointer flex items-center justify-center"
-                      onClick={() => navigate(notificationPath)}
-                    >
-                      View all notifications
-                      <ChevronRight className="ml-1 h-4 w-4" />
+                    ))
+                  ) : (
+                    <div className="px-4 py-3 text-center border-b border-[#2a2a2a]">
+                      No notifications
                     </div>
                   )}
-                </PopoverContent>
-              </Popover>
-            </div>
-          </Tooltip>
+                </div>
+
+                {/* {notifications.length > 0 && (
+                  <div
+                    className="px-4 py-3 text-center border-t border-[#2a2a2a] text-sm font-medium text-amber-500 hover:bg-[#2a2a2a] cursor-pointer flex items-center justify-center"
+                    onClick={() => navigate(notificationPath)}
+                  >
+                    View all notifications
+                    <ChevronRight className="ml-1 h-4 w-4" />
+                  </div>
+                )} */}
+              </PopoverContent>
+            </Popover>
+          </div>
 
           {/* Avatar with Dropdown */}
-          <Tooltip title="Account" arrow placement="bottom">
-            <div>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <div className="cursor-pointer">
+          <div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <div className="cursor-pointer">
+                  <Tooltip title="Account" arrow placement="bottom">
                     <Avatar className="h-8 w-8 ring-offset-amber-200 transition-colors hover:ring-2  hover:ring-offset-2">
                       <AvatarImage
                         className="object-cover hover:scale-110 transition-transform duration-200"
@@ -307,46 +310,46 @@ export function PrivateHeader({
                         {initials}
                       </AvatarFallback>
                     </Avatar>
-                  </div>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  className="w-56 bg-[#1e1e1e] text-white border-[#2a2a2a] shadow-lg"
-                  align="end"
-                >
-                  <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                  <DropdownMenuSeparator className="bg-[#2a2a2a]" />
-                  <DropdownMenuGroup>
-                    <DropdownMenuItem
-                      onClick={() => navigate(profilePath)}
-                      className="cursor-pointer hover:bg-[#2a2a2a] focus:bg-[#2a2a2a] focus:text-white"
-                    >
-                      <User className="mr-2 h-4 w-4" />
-                      <span>Profile</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => navigate(settingsPath)}
-                      className="cursor-pointer hover:bg-[#2a2a2a] focus:bg-[#2a2a2a] focus:text-white"
-                    >
-                      <Settings2 className="mr-2 h-4 w-4" />
-                      <span>Settings</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem className="cursor-pointer hover:bg-[#2a2a2a] focus:bg-[#2a2a2a] focus:text-white">
-                      <HelpCircle className="mr-2 h-4 w-4" />
-                      <span>Help & Support</span>
-                    </DropdownMenuItem>
-                  </DropdownMenuGroup>
-                  <DropdownMenuSeparator className="bg-[#2a2a2a]" />
+                  </Tooltip>
+                </div>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent
+                className="w-56 bg-[#1e1e1e] text-white border-[#2a2a2a] shadow-lg"
+                align="end"
+              >
+                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                <DropdownMenuSeparator className="bg-[#2a2a2a]" />
+                <DropdownMenuGroup>
                   <DropdownMenuItem
-                    className="cursor-pointer text-red-500 hover:text-red-500 hover:bg-red-500/10 focus:bg-red-500/10 focus:text-white"
-                    onClick={onLogout}
+                    onClick={() => navigate(profilePath)}
+                    className="cursor-pointer hover:bg-[#2a2a2a] focus:bg-[#2a2a2a] focus:text-white"
                   >
-                    <LogOut className="mr-2 h-4 w-4" />
-                    <span>Log out</span>
+                    <User className="mr-2 h-4 w-4" />
+                    <span>Profile</span>
                   </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-          </Tooltip>
+                  <DropdownMenuItem
+                    onClick={() => navigate(settingsPath)}
+                    className="cursor-pointer hover:bg-[#2a2a2a] focus:bg-[#2a2a2a] focus:text-white"
+                  >
+                    <Settings2 className="mr-2 h-4 w-4" />
+                    <span>Settings</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="cursor-pointer hover:bg-[#2a2a2a] focus:bg-[#2a2a2a] focus:text-white">
+                    <HelpCircle className="mr-2 h-4 w-4" />
+                    <span>Help & Support</span>
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator className="bg-[#2a2a2a]" />
+                <DropdownMenuItem
+                  className="cursor-pointer text-red-500 hover:text-red-500 hover:bg-red-500/10 focus:bg-red-500/10 focus:text-white"
+                  onClick={onLogout}
+                >
+                  <LogOut className="mr-2 h-4 w-4" />
+                  <span>Log out</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
       </div>
     </header>
