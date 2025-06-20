@@ -6,8 +6,8 @@ import {
 	PopoverTrigger,
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { formatTo12Hour } from "@/utils/helpers/timeFormatter";
 
@@ -28,11 +28,17 @@ export function TimePicker({
 }: TimePickerProps) {
 	const [selectedTime, setSelectedTime] = React.useState<string>(value || "");
 
-	const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const time24hValue = e.target.value;
-		setSelectedTime(time24hValue);
-		onChange(time24hValue);
-	};
+	React.useEffect(() => {
+		setSelectedTime(value);
+	}, [value]);
+
+	const timeOptions = React.useMemo(() => {
+		return Array.from({ length: 48 }, (_, i) => {
+			const h = String(Math.floor(i / 2)).padStart(2, "0");
+			const m = i % 2 === 0 ? "00" : "30";
+			return `${h}:${m}`;
+		});
+	}, []);
 
 	return (
 		<Popover>
@@ -45,7 +51,8 @@ export function TimePicker({
 						!value && "text-muted-foreground",
 						disabled && "opacity-50 cursor-not-allowed",
 						className
-					)}>
+					)}
+				>
 					<Clock className="mr-2 h-4 w-4" />
 					{formatTo12Hour(selectedTime) || "Select time"}
 				</Button>
@@ -53,14 +60,25 @@ export function TimePicker({
 			<PopoverContent className="w-auto bg-gray-100 p-4">
 				<div className="space-y-2">
 					<Label htmlFor="time-picker">{label}</Label>
-					<Input
-						id="time-picker"
-						type="time"
-						step={1800}
+					<Select
 						value={selectedTime}
-						onChange={handleTimeChange}
-						className="w-full cursor-pointer bg-gray-400 text-white font-semibold"
-					/>
+						onValueChange={(val) => {
+							setSelectedTime(val);
+							onChange(val);
+						}}
+						disabled={disabled}
+					>
+						<SelectTrigger className="w-full bg-gray-400 text-white font-semibold">
+							<SelectValue placeholder="Select time" />
+						</SelectTrigger>
+						<SelectContent>
+							{timeOptions.map((time) => (
+								<SelectItem key={time} value={time}>
+									{formatTo12Hour(time)}
+								</SelectItem>
+							))}
+						</SelectContent>
+					</Select>
 				</div>
 			</PopoverContent>
 		</Popover>
