@@ -31,10 +31,10 @@ export function BookingStatus({
     bookingData?.status === "completed"
       ? "finished"
       : bookingData?.status === "cancelled"
-      ? "cancelled"
-      : bookingData?.status === "confirmed"
-      ? "in-process"
-      : "booked"
+        ? "cancelled"
+        : bookingData?.status === "confirmed"
+          ? "in-process"
+          : "booked"
   );
 
   const navigate = useNavigate();
@@ -116,7 +116,7 @@ export function BookingStatus({
             <Progress
               value={getProgressPercentage()}
               className="h-1 bg-gray-300"
-              // indicatorClassName={isCancelled ? "bg-red-500" : "bg-blue-600"}
+            // indicatorClassName={isCancelled ? "bg-red-500" : "bg-blue-600"}
             />
 
             <div className="flex justify-between items-center">
@@ -136,10 +136,9 @@ export function BookingStatus({
                   <div key={step.id} className="flex flex-col items-center">
                     <div
                       className={`w-8 h-8 rounded-full flex items-center justify-center 
-                        ${
-                          index <= currentStepIndex
-                            ? "bg-blue-600 text-white"
-                            : "bg-white border border-gray-300"
+                        ${index <= currentStepIndex
+                          ? "bg-blue-600 text-white"
+                          : "bg-white border border-gray-300"
                         }`}
                     >
                       <span className="text-xs">{step.icon}</span>
@@ -195,8 +194,8 @@ export function BookingStatus({
                     <button
                       onClick={() =>
                         openInGoogleMap(
-                          bookingData?.shopDetails?.location?.coordinates?.[1],
-                          bookingData?.shopDetails?.location?.coordinates?.[0]
+                          bookingData?.shopDetails?.geoLocation?.coordinates?.[1],
+                          bookingData?.shopDetails?.geoLocation?.coordinates?.[0]
                         )
                       }
                       className="w-8 h-8 rounded-full hover:cursor-pointer bg-green-100 hover:text-green-700 hover:bg-green-200 flex items-center justify-center"
@@ -209,8 +208,7 @@ export function BookingStatus({
                     <button
                       onClick={() =>
                         navigate(
-                          `/chat?userId=${
-                            bookingData?.shopDetails?.userId || ""
+                          `/chat?userId=${bookingData?.shopDetails?.userId || ""
                           }&type=dm`
                         )
                       }
@@ -224,7 +222,7 @@ export function BookingStatus({
 
                 <div className="flex gap-2">
                   {bookingData?.status === "confirmed" ||
-                  bookingData?.status === "pending" ? (
+                    bookingData?.status === "pending" ? (
                     <MuiButton
                       loading={isLoading}
                       onClick={() => handleCancel(bookingData.bookingId || "")}
@@ -257,7 +255,7 @@ export function BookingStatus({
             Find Shop In Map
           </h2>
           <div className="h-full rounded-lg overflow-hidden">
-            {bookingData?.shopDetails?.location?.coordinates ? (
+            {bookingData?.shopDetails?.geoLocation?.coordinates ? (
               <iframe
                 width="100%"
                 height="100%"
@@ -266,7 +264,7 @@ export function BookingStatus({
                 referrerPolicy="no-referrer-when-downgrade"
                 allowFullScreen
                 loading="lazy"
-                src={`https://www.google.com/maps?q=${bookingData?.shopDetails?.location?.coordinates[1]},${bookingData?.shopDetails?.location?.coordinates[0]}&output=embed`}
+                src={`https://www.google.com/maps?q=${bookingData?.shopDetails?.geoLocation?.coordinates[1]},${bookingData?.shopDetails?.geoLocation?.coordinates[0]}&output=embed`}
               />
             ) : (
               <div className="h-full bg-gray-200 flex items-center justify-center rounded-lg">

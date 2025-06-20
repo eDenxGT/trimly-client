@@ -23,7 +23,7 @@ const ShopListingPage = () => {
 		refetch,
 	} = useNearestBarberShopsQuery(getAllNearestBarberShops, {
 		search: searchTerm,
-		userLocation: user.location?.coordinates || [],
+		userLocation: user.geoLocation?.coordinates || [],
 		amenities,
 		sortBy: sortRules[0].sortBy,
 		sortOrder: sortRules[0].sortOrder,

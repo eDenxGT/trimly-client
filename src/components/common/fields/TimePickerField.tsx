@@ -56,6 +56,7 @@ export function TimePicker({
 					<Input
 						id="time-picker"
 						type="time"
+						step={1800}
 						value={selectedTime}
 						onChange={handleTimeChange}
 						className="w-full cursor-pointer bg-gray-400 text-white font-semibold"

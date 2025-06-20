@@ -34,11 +34,14 @@ export interface IAdmin extends User {
 
 export interface IClient extends User {
   googleId?: string;
+  geoLocation?: {
+    type?: "Point";
+    coordinates?: number[];
+  };
   location?: {
     name?: string;
     displayName?: string;
     zipCode?: string;
-    coordinates?: number[];
   };
   walletBalance?: number;
 }
@@ -70,12 +73,14 @@ export interface IBarber extends Omit<User, "fullName"> {
     type: string;
   };
   rejectionReason?: string;
-  location?: {
+  geoLocation?: {
     type?: "Point";
+    coordinates?: number[];
+  };
+  location?: {
     name?: string;
     displayName?: string;
     zipCode?: string;
-    coordinates?: number[];
   };
   services?: IService[];
   bookings?: IBooking[];

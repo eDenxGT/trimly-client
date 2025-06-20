@@ -26,6 +26,7 @@ export const refreshClientSessionThunk = createAsyncThunk<
 			phoneNumber: user.phoneNumber,
 			status: user.status,
 			googleId: (user as IClient).googleId,
+			geoLocation: (user as IClient).geoLocation,
 			location: (user as IClient).location,
 			createdAt: user.createdAt,
 			updatedAt: user.updatedAt,

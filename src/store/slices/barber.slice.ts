@@ -28,6 +28,7 @@ export const refreshBarberSessionThunk = createAsyncThunk<
 			banner: (user as IBarber).banner ?? "",
 			rejectionReason: (user as IBarber).rejectionReason ?? "",
 			location: (user as IBarber).location ?? {},
+			geoLocation: (user as IBarber).geoLocation ?? {},
 			description: (user as IBarber).description ?? "",
 			openingHours: (user as IBarber).openingHours ?? {},
 			amenities: (user as IBarber).amenities,

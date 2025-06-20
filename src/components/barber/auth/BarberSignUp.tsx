@@ -96,18 +96,20 @@ export const BarberSignUp = ({
       phoneNumber: "",
       password: "",
       confirmPassword: "",
-      location: {
+      geoLocation: {
         type: "Point",
+        coordinates: [],
+      },
+      location: {
         name: "",
         displayName: "",
         zipCode: "",
-        coordinates: [],
       },
     },
     validationSchema: barberSignupSchema,
     onSubmit: (values) => {
       if (
-        values.location?.coordinates?.length === 0 ||
+        values.geoLocation?.coordinates?.length === 0 ||
         !values.location?.zipCode ||
         !values.location?.name ||
         !values.location?.displayName
@@ -130,12 +132,14 @@ export const BarberSignUp = ({
     latitude: number | null;
     longitude: number | null;
   }) => {
-    formik.setFieldValue("location", {
+    formik.setFieldValue("geoLocation", {
       type: "Point",
+      coordinates: [location.longitude, location.latitude],
+    });
+    formik.setFieldValue("location", {
       name: location.name,
       displayName: location.displayName,
       zipCode: location.zipCode,
-      coordinates: [location.longitude, location.latitude],
     });
   };
 

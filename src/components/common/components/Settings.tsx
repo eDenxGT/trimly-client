@@ -4,15 +4,11 @@ import {
 	LockKeyhole,
 	LogOut,
 	SettingsIcon,
-	Trash2,
 	User,
-	Bell,
 	Clock,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { useNavigate } from "react-router-dom";
 import { ConfirmationModal } from "@/components/modals/ConfirmationModal";
@@ -43,44 +39,44 @@ export function Settings({
 
 	profileUrl,
 	securityUrl,
-	initialEmailNotifications = true,
-	initialAppNotifications = true,
-	initialMarketingEmails = false,
+	// initialEmailNotifications = true,
+	// initialAppNotifications = true,
+	// initialMarketingEmails = false,
 
 	// Handlers
-	onEmailNotificationsChange = () => {},
-	onAppNotificationsChange = () => {},
+	// onEmailNotificationsChange = () => {},
+	// onAppNotificationsChange = () => {},
 	//   onMarketingEmails = () => {},
-	onLogout = () => {},
-	onDeleteAccount = () => {},
+	onLogout = () => { },
+	// onDeleteAccount = () => {},
 }: SettingsProps) {
 	const navigate = useNavigate();
-	const [emailNotifications, setEmailNotifications] = useState(
-		initialEmailNotifications
-	);
-	const [appNotifications, setAppNotifications] = useState(
-		initialAppNotifications
-	);
-	const [marketingEmails, setMarketingEmails] = useState(
-		initialMarketingEmails
-	);
-	const [confirmDelete, setConfirmDelete] = useState(false);
+	// const [emailNotifications, setEmailNotifications] = useState(
+	// 	initialEmailNotifications
+	// );
+	// const [appNotifications, setAppNotifications] = useState(
+	// 	initialAppNotifications
+	// );
+	// const [marketingEmails, setMarketingEmails] = useState(
+	// 	initialMarketingEmails
+	// );
+	// // const [confirmDelete, setConfirmDelete] = useState(false);
 	const [confirmLogout, setConfirmLogout] = useState(false);
 
-	const handleEmailNotificationsChange = (checked: boolean) => {
-		setEmailNotifications(checked);
-		onEmailNotificationsChange(checked);
-	};
+	// const handleEmailNotificationsChange = (checked: boolean) => {
+	// 	setEmailNotifications(checked);
+	// 	onEmailNotificationsChange(checked);
+	// };
 
-	const handleAppNotificationsChange = (checked: boolean) => {
-		setAppNotifications(checked);
-		onAppNotificationsChange(checked);
-	};
+	// const handleAppNotificationsChange = (checked: boolean) => {
+	// 	setAppNotifications(checked);
+	// 	onAppNotificationsChange(checked);
+	// };
 
-	const handleMarketingEmailsChange = (checked: boolean) => {
-		setMarketingEmails(checked);
-		//  onMarketingEmails(checked);
-	};
+	// const handleMarketingEmailsChange = (checked: boolean) => {
+	// 	setMarketingEmails(checked);
+	// 	//  onMarketingEmails(checked);
+	// };
 
 	const handleLogout = () => {
 		onLogout();
@@ -91,14 +87,14 @@ export function Settings({
 		}, 500);
 	};
 
-	const handleDeleteAccount = () => {
-		onDeleteAccount();
+	// const handleDeleteAccount = () => {
+	// 	onDeleteAccount();
 
-		setTimeout(() => {
-			setConfirmDelete(false);
-			navigate("/");
-		}, 500);
-	};
+	// 	setTimeout(() => {
+	// 		setConfirmDelete(false);
+	// 		navigate("/");
+	// 	}, 500);
+	// };
 
 	return (
 		<div className="max-w-4xl mx-auto py-10 px-4 sm:px-6 space-y-8 mt-8">
@@ -169,7 +165,7 @@ export function Settings({
 				)}
 
 				{/* Notifications Card */}
-				<Card className="overflow-hidden border  border-gray-200 hover:border-gray-300 transition-colors">
+				{/* <Card className="overflow-hidden border  border-gray-200 hover:border-gray-300 transition-colors">
 					<CardHeader className="flex flex-row items-center gap-4 p-6">
 						<div className="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100">
 							<Bell className="h-5 w-5 text-gray-700" />
@@ -243,7 +239,7 @@ export function Settings({
 							</div>
 						</div>
 					</CardContent>
-				</Card>
+				</Card> */}
 
 				{/* Account Actions Card */}
 				<Card className="overflow-hidden border border-red-200 bg-red-50">
@@ -283,7 +279,7 @@ export function Settings({
 								<Separator className="bg-gray-200" />
 							</>
 
-							<div className="flex items-center justify-between">
+							{/* <div className="flex items-center justify-between">
 								<div>
 									<span className="font-medium text-red-600">
 										Delete Account
@@ -300,7 +296,7 @@ export function Settings({
 									<Trash2 className="h-4 w-4" />
 									Delete
 								</Button>
-							</div>
+							</div> */}
 						</div>
 					</CardContent>
 				</Card>
@@ -318,7 +314,7 @@ export function Settings({
 			/>
 
 			{/* Delete Account Confirmation Modal */}
-			<ConfirmationModal
+			{/* <ConfirmationModal
 				isOpen={confirmDelete}
 				title="Are you sure you want to delete your account?"
 				description="This action cannot be undone. Your account and all your data will be permanently deleted."
@@ -326,7 +322,7 @@ export function Settings({
 				confirmVariant="destructive"
 				onConfirm={handleDeleteAccount}
 				onClose={() => setConfirmDelete(false)}
-			/>
+			/> */}
 		</div>
 	);
 }

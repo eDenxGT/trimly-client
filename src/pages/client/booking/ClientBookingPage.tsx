@@ -102,9 +102,9 @@ export function ClientBookingPage() {
       day,
       hours
         ? {
-            open: hours.open ?? null,
-            close: hours.close ?? null,
-          }
+          open: hours.open ?? null,
+          close: hours.close ?? null,
+        }
         : null,
     ])
   );
@@ -264,7 +264,10 @@ export function ClientBookingPage() {
   };
 
   const handleTimeSelection = (time: string) => {
-    if (!selectedDate || selectedServices.length === 0) return;
+    if (!selectedDate || selectedServices.length === 0) {
+      errorToast("Select at least one service first");
+      return;
+    }
 
     setSelectedTime(time);
 
@@ -414,7 +417,7 @@ export function ClientBookingPage() {
                       className={cn(
                         "text-xs h-7 px-3 rounded-full border-[var(--darkblue)]/20 text-[var(--darkblue)]",
                         selectedTime === slot.time &&
-                          "bg-[var(--darkblue)] text-white hover:text-white border-[var(--darkblue)] hover:bg-[var(--darkblue)]/90",
+                        "bg-[var(--darkblue)] text-white hover:text-white border-[var(--darkblue)] hover:bg-[var(--darkblue)]/90",
                         !slot.available && "opacity-40 cursor-not-allowed"
                       )}
                       disabled={!slot.available}

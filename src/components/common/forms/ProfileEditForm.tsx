@@ -16,7 +16,6 @@ interface ILocation {
   name: string;
   displayName: string;
   zipCode: string;
-  coordinates?: number[];
 }
 
 type FormValues = {
@@ -25,6 +24,7 @@ type FormValues = {
   avatar: string;
   fullName?: string;
   location?: ILocation;
+  geoLocation?: { type: "Point"; coordinates?: number[] };
   shopName?: string;
   banner?: string;
   description?: string;
@@ -56,11 +56,14 @@ const getInitialValues = <T extends IClient | IBarber | IAdmin>(
     const client = initialData as IClient;
     return {
       ...commonFields,
+      geoLocation: {
+        type: "Point",
+        coordinates: client.geoLocation?.coordinates,
+      },
       location: {
         name: client.location?.name || "",
         displayName: client.location?.displayName || "",
         zipCode: client.location?.zipCode || "",
-        coordinates: client.location?.coordinates,
       },
       fullName: client.fullName || "",
     };
@@ -70,11 +73,14 @@ const getInitialValues = <T extends IClient | IBarber | IAdmin>(
     const barber = initialData as IBarber;
     return {
       ...commonFields,
+      geoLocation: {
+        type: "Point",
+        coordinates: barber.geoLocation?.coordinates,
+      },
       location: {
         name: barber.location?.name || "",
         displayName: barber.location?.displayName || "",
         zipCode: barber.location?.zipCode || "",
-        coordinates: barber.location?.coordinates,
       },
       shopName: barber.shopName || "",
       banner: barber.banner || "",
@@ -91,8 +97,8 @@ const getInitialValues = <T extends IClient | IBarber | IAdmin>(
 
 enum RoleFields {
   Admin = "fullName,email,phoneNumber,avatar",
-  Client = "fullName,email,phoneNumber,location,avatar",
-  Barber = "shopName,email,phoneNumber,description,location,avatar,banner",
+  Client = "fullName,email,phoneNumber,location,geoLocation,avatar",
+  Barber = "shopName,email,phoneNumber,description,location,geoLocation,avatar,banner",
 }
 
 const roleFields: Record<UserRoles, string[]> = {
@@ -116,6 +122,7 @@ export default function ProfileEditForm<T extends IAdmin | IClient | IBarber>({
 }: ProfileManagementProps<T>) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const isProcessing = isLoading || isSubmitting;
+  console.log("Initial Data", isProcessing);
   const navigate = useNavigate();
 
   const [avatarUrl, setAvatarUrl] = useState<string | null>(
@@ -136,7 +143,7 @@ export default function ProfileEditForm<T extends IAdmin | IClient | IBarber>({
       setIsSubmitting(true);
       try {
         const updatedValues = { ...values };
-
+console.log("Updated Values", updatedValues);
         if (avatarRef.current) {
           const uploadedAvatarUrl = await uploadImageToCloudinary(
             avatarRef.current
@@ -186,12 +193,15 @@ export default function ProfileEditForm<T extends IAdmin | IClient | IBarber>({
     latitude: number | null;
     longitude: number | null;
   }) => {
-    formik.setFieldValue("location", {
+    console.log("Location", location);
+    formik.setFieldValue("geoLocation", {
       type: "Point",
+      coordinates: [location.longitude, location.latitude],
+    });
+    formik.setFieldValue("location", {
       name: location.name,
       displayName: location.displayName,
       zipCode: location.zipCode,
-      coordinates: [location.longitude, location.latitude],
     });
   };
 
@@ -365,7 +375,8 @@ export default function ProfileEditForm<T extends IAdmin | IClient | IBarber>({
             type="submit"
             loading={isProcessing}
             disabled={isProcessing}
-            // className="bg-yellow-400 hover:bg-yellow-500 text-black font-medium py-2 px-6 rounded-md transition-colors disabled:opacity-50"
+            onClick={formik.submitForm}
+          // className="bg-yellow-400 hover:bg-yellow-500 text-black font-medium py-2 px-6 rounded-md transition-colors disabled:opacity-50"
           >
             Save Changes
           </MuiAnimatedButton>

@@ -282,9 +282,9 @@ export function BookingHistory({
                     variant="darkblue"
                     onClick={() =>
                       openInGoogleMap(
-                        selectedBooking?.shopDetails?.location
-                          ?.coordinates?.[1],
-                        selectedBooking?.shopDetails?.location?.coordinates?.[0]
+                        selectedBooking?.shopDetails
+                          ?.geoLocation?.coordinates?.[1],
+                        selectedBooking?.shopDetails?.geoLocation?.coordinates?.[0]
                       )
                     }
                     className=" flex justify-center items-center gap-1.5"
@@ -331,35 +331,35 @@ export function BookingHistory({
                 </Button>
                 {(selectedBooking?.status === "confirmed" ||
                   selectedBooking?.status === "pending") && (
-                  <MuiButton
-                    onClick={() =>
-                      handleCancel(selectedBooking?.bookingId as string)
-                    }
-                    variant="darkblue"
-                  >
-                    Cancel
-                  </MuiButton>
-                )}
-                {(selectedBooking?.status === "completed" ||
-                  selectedBooking?.status) === "cancelled" && (
-                  <div className="flex gap-3">
-                    <MuiButton
-                      onClick={() => setIsReviewModalOpen(true)}
-                      variant="darkblue"
-                    >
-                      Rate It
-                    </MuiButton>
                     <MuiButton
                       onClick={() =>
-                        navigate(
-                          `/shops/${selectedBooking?.shopDetails?.userId}/booking`
-                        )
+                        handleCancel(selectedBooking?.bookingId as string)
                       }
+                      variant="darkblue"
                     >
-                      Book Again
+                      Cancel
                     </MuiButton>
-                  </div>
-                )}
+                  )}
+                {(selectedBooking?.status === "completed" ||
+                  selectedBooking?.status) === "cancelled" && (
+                    <div className="flex gap-3">
+                      <MuiButton
+                        onClick={() => setIsReviewModalOpen(true)}
+                        variant="darkblue"
+                      >
+                        Rate It
+                      </MuiButton>
+                      <MuiButton
+                        onClick={() =>
+                          navigate(
+                            `/shops/${selectedBooking?.shopDetails?.userId}/booking`
+                          )
+                        }
+                      >
+                        Book Again
+                      </MuiButton>
+                    </div>
+                  )}
               </DialogFooter>
             </div>
           )}

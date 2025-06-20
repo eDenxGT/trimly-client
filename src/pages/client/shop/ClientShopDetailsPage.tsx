@@ -144,13 +144,12 @@ export function ClientShopDetailsPage({ role = "client" }: { role: string }) {
 
           {/* Shop Status Badge */}
           <Badge
-            className={`absolute top-4 right-4 ${
-              shop.status === "active"
-                ? "bg-green-100 text-green-800 border-green-200"
-                : shop.status === "pending"
+            className={`absolute top-4 right-4 ${shop.status === "active"
+              ? "bg-green-100 text-green-800 border-green-200"
+              : shop.status === "pending"
                 ? "bg-yellow-100 text-yellow-800 border-yellow-200"
                 : "bg-red-100 text-red-800 border-red-200"
-            }`}
+              }`}
           >
             {shop.status === "active" ? (
               <>
@@ -199,8 +198,8 @@ export function ClientShopDetailsPage({ role = "client" }: { role: string }) {
               className="flex flex-col items-center p-2 h-auto text-gray-600 transition-colors hover:text-[var(--yellow-hover)]"
               onClick={() =>
                 openInGoogleMap(
-                  shop.location?.coordinates?.[1],
-                  shop.location?.coordinates?.[0]
+                  shop?.geoLocation?.coordinates?.[1],
+                  shop?.geoLocation?.coordinates?.[0]
                 )
               }
             >
@@ -299,7 +298,7 @@ export function ClientShopDetailsPage({ role = "client" }: { role: string }) {
                     <h3 className="font-semibold mb-2">Amenities</h3>
                     <div className="flex flex-wrap gap-2">
                       {shop.amenities &&
-                      Object.keys(shop.amenities).length > 0 ? (
+                        Object.keys(shop.amenities).length > 0 ? (
                         Object.entries(shop.amenities).map(
                           ([key, value]) =>
                             value && (
@@ -328,7 +327,7 @@ export function ClientShopDetailsPage({ role = "client" }: { role: string }) {
                   <div>
                     <h3 className="font-semibold mb-2">Location</h3>
                     <div className="h-40 rounded-lg overflow-hidden">
-                      {shop.location?.coordinates ? (
+                      {shop?.geoLocation?.coordinates ? (
                         <iframe
                           width="100%"
                           height="100%"
@@ -337,7 +336,7 @@ export function ClientShopDetailsPage({ role = "client" }: { role: string }) {
                           referrerPolicy="no-referrer-when-downgrade"
                           allowFullScreen
                           loading="lazy"
-                          src={`https://www.google.com/maps?q=${shop.location.coordinates[1]},${shop.location.coordinates[0]}&output=embed`}
+                          src={`https://www.google.com/maps?q=${shop?.geoLocation?.coordinates[1]},${shop?.geoLocation?.coordinates[0]}&output=embed`}
                         ></iframe>
                       ) : (
                         <div className="h-full bg-gray-200 flex items-center justify-center rounded-lg">
@@ -347,8 +346,8 @@ export function ClientShopDetailsPage({ role = "client" }: { role: string }) {
                       )}
                     </div>
                     <p className="mt-2 text-sm text-gray-700">
-                      {shop.location?.displayName || "Address not available"}
-                      {shop.location?.zipCode && `, ${shop.location.zipCode}`}
+                      {shop?.location?.displayName || "Address not available"}
+                      {shop?.location?.zipCode && `, ${shop.location.zipCode}`}
                     </p>
                   </div>
 
@@ -554,11 +553,10 @@ export function ClientShopDetailsPage({ role = "client" }: { role: string }) {
                                   (_, i): React.ReactNode => (
                                     <Star
                                       key={i}
-                                      className={`h-3 w-3 ${
-                                        i < review.rating
-                                          ? "fill-[#FFD700] text-[#FFD700]"
-                                          : "text-gray-300"
-                                      }`}
+                                      className={`h-3 w-3 ${i < review.rating
+                                        ? "fill-[#FFD700] text-[#FFD700]"
+                                        : "text-gray-300"
+                                        }`}
                                     />
                                   )
                                 )}

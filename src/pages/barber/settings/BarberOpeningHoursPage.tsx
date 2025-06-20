@@ -9,6 +9,7 @@ import { IBarber } from "@/types/User";
 import { motion } from "framer-motion";
 import { useSelector } from "react-redux";
 
+
 export const BarberOpeningHoursPage = () => {
   const barber = useSelector((state: RootState) => state.barber.barber);
   const {
@@ -18,7 +19,27 @@ export const BarberOpeningHoursPage = () => {
   } = useBarberProfileMutation();
   const { successToast, errorToast } = useToaster();
   const dispatch = useAppDispatch();
+
+
+  function validateWorkingHours(workingHours: IBarber["openingHours"]): boolean {
+    if (!workingHours) {
+      errorToast("Working hours are required");
+      return false;
+    }
+    for (const [day, timing] of Object.entries(workingHours)) {
+      console.log(day, timing);
+      const { open, close } = timing as { open: string; close: string };
+      console.log(open, close);
+      if (open !== null && open === "" || close !== null && close === "") {
+        errorToast(`Please set both open and close time or mark ${day} as off`);
+        return false;
+      }
+    }
+    return true;
+  }
+
   const updateOpeningHours = (barberOpeningHours: IBarber["openingHours"]) => {
+    if (!validateWorkingHours(barberOpeningHours)) return;
     updateBarber(
       {
         openingHours: barberOpeningHours,
@@ -62,3 +83,5 @@ export const BarberOpeningHoursPage = () => {
     </motion.div>
   );
 };
+
+
