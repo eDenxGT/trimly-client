@@ -1,6 +1,6 @@
 import { useRazorpay } from "react-razorpay";
 import TrimlyLogo from "/logo.svg";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import MuiButton from "@/components/common/buttons/MuiButton";
 import { useToaster } from "@/hooks/ui/useToaster";
 import { CurrencyCode } from "react-razorpay/dist/constants/currency";
@@ -50,11 +50,28 @@ export const RazorpayButton: React.FC<RazorpayButtonProps> = ({
 }) => {
   const { Razorpay } = useRazorpay();
   const { errorToast, successToast } = useToaster();
+  const [orderId, setOrderId] = useState<string>("");
   const isPaymentFailedRef = useRef(false);
+
+  useEffect(() => {
+    const handleBeforeUnload = async (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      await onFailure({ orderId, status: "cancelled" });
+      e.returnValue = "";
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [onFailure, orderId]);
+
 
   const handlePayment = async () => {
     try {
       const { orderId, currency, customData } = await onCreateOrder();
+      setOrderId(orderId);
       const options = {
         key: import.meta.env.VITE_RAZORPAY_KEY_ID,
         amount,
@@ -81,6 +98,7 @@ export const RazorpayButton: React.FC<RazorpayButtonProps> = ({
         modal: {
           ondismiss: () => {
             if (!isPaymentFailedRef.current) {
+              onFailure({ orderId, status: "cancelled" });
               console.log("Modal closed");
             }
             isPaymentFailedRef.current = false;
