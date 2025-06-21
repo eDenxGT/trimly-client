@@ -3,6 +3,7 @@ import {
   IAllCommunitiesResponse,
   IAxiosResponse,
   ICommunityChatResponse,
+  ICommunityMembersList,
 } from "@/types/Response";
 import { ICommunityChat } from "@/types/Chat";
 import {
@@ -10,6 +11,7 @@ import {
   adminDeleteCommunity,
   adminEditCommunity,
   adminGetCommunityById,
+  adminGetCommunityMembersById,
   adminToggleCommunityStatus,
 } from "@/services/admin/adminService";
 
@@ -62,5 +64,13 @@ export const useGetAllCommunities = ({
   return useQuery<IAllCommunitiesResponse, Error>({
     queryKey: ["communities", search, page, limit],
     queryFn: () => queryFn({ search, page, limit }),
+  });
+};
+
+export const useGetCommunityMembers = (communityId: string) => {
+  return useQuery<ICommunityMembersList>({
+    queryKey: ["community-members-list", communityId],
+    queryFn: () => adminGetCommunityMembersById(communityId),
+    enabled: !!communityId,
   });
 };

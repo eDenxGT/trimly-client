@@ -91,6 +91,7 @@ export const AdminCommunityListPage = () => {
         <CommunitiesTable
           communities={data?.communities || []}
           onDelete={handleDelete}
+          handlePageChange={handlePageChange}
           onStatusChange={handleStatusChange}
           searchTerm={searchTerm}
           setSearchTerm={setSearchTerm}

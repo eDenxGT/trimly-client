@@ -12,6 +12,7 @@ import {
   IAuthResponse,
   IAxiosResponse,
   ICommunityChatResponse,
+  ICommunityMembersList,
   IHairstylePaginationResponse,
   WithdrawalResponse,
 } from "@/types/Response";
@@ -210,6 +211,13 @@ export const adminGetAllCommunities = async ({
   const response = await adminAxiosInstance.get<IAllCommunitiesResponse>(
     "/admin/communities",
     { params: { search, page, limit } }
+  );
+  return response.data;
+};
+
+export const adminGetCommunityMembersById = async (communityId: string) => {
+  const response = await adminAxiosInstance.get<ICommunityMembersList>(
+    `/admin/community/${communityId}/members`
   );
   return response.data;
 };

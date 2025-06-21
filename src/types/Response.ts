@@ -118,6 +118,10 @@ export interface IAllCommunitiesResponse {
   currentPage: number;
 }
 
+export interface ICommunityMembersList {
+  members: Partial<IBarber>[];
+}
+
 export interface ICommunityChatResponse extends IAxiosResponse {
   community: ICommunityChat;
 }

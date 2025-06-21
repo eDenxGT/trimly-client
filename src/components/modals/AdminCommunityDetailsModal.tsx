@@ -12,6 +12,7 @@ import { UserX } from "lucide-react";
 import { getSmartDate } from "@/utils/helpers/timeFormatter";
 import MuiButton from "../common/buttons/MuiButton";
 import { useNavigate } from "react-router-dom";
+import { useGetCommunityMembers } from "@/hooks/admin/useCommunity";
 
 interface CommunityDetailsModalProps {
   community: ICommunityChat | null;
@@ -28,7 +29,10 @@ export const CommunityDetailsModal = ({
 
   const navigate = useNavigate();
 
+  const { data: communityMembers } = useGetCommunityMembers(community?.communityId || "");
+
   if (!community) return null;
+
 
   const handleRemoveBarber = (barberId: string, barberName: string) => {
     // TODO: Implement actual removal logic when backend is connected
@@ -139,13 +143,13 @@ export const CommunityDetailsModal = ({
             </div>
 
             <ScrollArea className="h-[240px] rounded-md border border-zinc-200">
-              {!community.members?.length ? (
+              {!communityMembers?.members?.length ? (
                 <div className="flex items-center justify-center h-full text-sm text-zinc-500">
                   No members in this community yet
                 </div>
               ) : (
                 <div className="p-4 space-y-3">
-                  {community.members.map((member) => (
+                  {communityMembers?.members.map((member) => (
                     <div
                       key={member.userId}
                       className="flex items-center justify-between gap-3 p-2 rounded-lg hover:bg-zinc-50 transition-colors"
@@ -161,9 +165,6 @@ export const CommunityDetailsModal = ({
                         <div>
                           <p className="text-sm font-medium text-zinc-900">
                             {member.shopName}
-                          </p>
-                          <p className="text-xs text-zinc-500">
-                            {member.role || "Member"}
                           </p>
                         </div>
                       </div>

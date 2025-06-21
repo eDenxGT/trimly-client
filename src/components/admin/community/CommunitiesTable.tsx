@@ -22,12 +22,14 @@ export const CommunitiesTable = ({
   communities,
   onDelete,
   onStatusChange,
+  handlePageChange,
   searchTerm,
   setSearchTerm,
 }: {
   communities: ICommunityChat[];
   onDelete: (communityId: string) => void;
   onStatusChange: (communityId: string) => void;
+  handlePageChange: (page: number) => void;
   searchTerm: string;
   setSearchTerm: (searchTerm: string) => void;
 }) => {
@@ -41,7 +43,10 @@ export const CommunitiesTable = ({
 
   const handleSearch = (term: string) => {
     setSearchTerm(term);
+    handlePageChange(1);
   };
+
+  console.log("CommunitiesTable", selectedCommunity);
 
   return (
     <div className="container mx-auto p-6 mt-16 max-w-7xl">
