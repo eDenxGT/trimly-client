@@ -9,6 +9,7 @@ import { ICommunityChat } from "@/types/Chat";
 import {
   adminCreateCommunity,
   adminDeleteCommunity,
+  adminDeleteCommunityMember,
   adminEditCommunity,
   adminGetCommunityById,
   adminGetCommunityMembersById,
@@ -72,5 +73,15 @@ export const useGetCommunityMembers = (communityId: string) => {
     queryKey: ["community-members-list", communityId],
     queryFn: () => adminGetCommunityMembersById(communityId),
     enabled: !!communityId,
+  });
+};
+
+export const useRemoveCommunityMember = () => {
+  return useMutation<
+    IAxiosResponse,
+    Error,
+    { communityId: string; userId: string }
+  >({
+    mutationFn: adminDeleteCommunityMember,
   });
 };

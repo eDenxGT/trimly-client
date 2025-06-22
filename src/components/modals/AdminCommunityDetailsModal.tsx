@@ -12,7 +12,8 @@ import { UserX } from "lucide-react";
 import { getSmartDate } from "@/utils/helpers/timeFormatter";
 import MuiButton from "../common/buttons/MuiButton";
 import { useNavigate } from "react-router-dom";
-import { useGetCommunityMembers } from "@/hooks/admin/useCommunity";
+import { useGetCommunityMembers, useRemoveCommunityMember } from "@/hooks/admin/useCommunity";
+import { useToaster } from "@/hooks/ui/useToaster";
 
 interface CommunityDetailsModalProps {
   community: ICommunityChat | null;
@@ -25,22 +26,28 @@ export const CommunityDetailsModal = ({
   isOpen,
   onClose,
 }: CommunityDetailsModalProps) => {
-  //   const { toast } = useToast();
 
   const navigate = useNavigate();
 
-  const { data: communityMembers } = useGetCommunityMembers(community?.communityId || "");
+  const { data: communityMembers, refetch } = useGetCommunityMembers(community?.communityId || "");
+
+  const { successToast, errorToast } = useToaster();
+  const { mutate: removeCommunityMember } = useRemoveCommunityMember();
 
   if (!community) return null;
 
 
   const handleRemoveBarber = (barberId: string, barberName: string) => {
-    // TODO: Implement actual removal logic when backend is connected
-    console.log("Removing barber:", barberId, barberName);
-    // toast({
-    //   title: "Barber Removed",
-    //   description: `${barberName} has been removed from the community.`,
-    // });
+    removeCommunityMember({ communityId: community.communityId, userId: barberId }, {
+      onSuccess: () => {
+        successToast(`${barberName} has been removed from the community.`);
+        refetch();
+        community.membersCount = community.membersCount ? community.membersCount - 1 : 0;
+      },
+      onError: (err: any) => {
+        errorToast(err.response.data.message || "Failed to remove barber from community.");
+      },
+    });
   };
 
   return (

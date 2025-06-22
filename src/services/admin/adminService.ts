@@ -222,6 +222,19 @@ export const adminGetCommunityMembersById = async (communityId: string) => {
   return response.data;
 };
 
+export const adminDeleteCommunityMember = async ({
+  communityId,
+  userId,
+}: {
+  communityId: string;
+  userId: string;
+}) => {
+  const response = await adminAxiosInstance.delete<IAxiosResponse>(
+    `/admin/community/${communityId}/members/${userId}`
+  );
+  return response.data;
+};
+
 export const adminScheduleMeeting = async (data: Partial<IMeetingRoom>) => {
   const response = await adminAxiosInstance.post<IAxiosResponse>(
     "/admin/meeting",
