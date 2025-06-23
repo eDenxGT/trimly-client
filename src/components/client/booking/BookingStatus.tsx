@@ -26,6 +26,7 @@ export function BookingStatus({
   bookingData?: IBooking | null;
   handleCancel: (bookingId: string) => void;
 }) {
+  console.log("bookingData", bookingData);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [currentStep] = useState(
     bookingData?.status === "completed"
