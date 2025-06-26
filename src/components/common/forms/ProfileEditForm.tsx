@@ -258,7 +258,7 @@ console.log("Updated Values", updatedValues);
             onBlur={formik.handleBlur}
             label="Email"
             placeholder="Enter your email address"
-            disabled={isProcessing}
+            disabled={true}
           />
         </div>
 

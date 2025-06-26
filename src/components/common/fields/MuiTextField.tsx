@@ -15,6 +15,7 @@ interface MuiTextFieldProps {
   error?: boolean;
   helperText?: string;
   isPassword?: boolean;
+  className?: string;
 }
 
 export const MuiTextField: React.FC<MuiTextFieldProps> = ({
@@ -25,6 +26,7 @@ export const MuiTextField: React.FC<MuiTextFieldProps> = ({
   placeholder,
   value,
   disabled = false,
+  className,
   onChange,
   onBlur,
   error,
@@ -89,6 +91,7 @@ export const MuiTextField: React.FC<MuiTextFieldProps> = ({
           minHeight: "1rem",
         },
       }}
+      className={className}
     />
   );
 };
